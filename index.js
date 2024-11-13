@@ -29,7 +29,7 @@ function queryBuilder(xpath){
 
 // Function to parse HTML and check CSS selector
 async function checkCssSelector(url, cssSelector) {
-    console.log('hey')
+    console.log('looking for matches ......')
     try {
         const html = await fetchHtml(url);
         const $ = cheerio.load(html);
