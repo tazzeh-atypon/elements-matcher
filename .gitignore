@@ -1,0 +1,14 @@
+node_modules/
+npm-debug.log
+yarn-error.log
+
+
+# VSCode settings
+.vscode/
+
+# Mac OS X system files
+.DS_Store
+
+# Logs
+logs/
+*.log

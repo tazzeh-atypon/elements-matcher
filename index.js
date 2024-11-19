@@ -1,9 +1,9 @@
 #!/usr/bin/env node
-const products = require('./prods');
-const puppeteer = require('puppeteer');
-const cheerio = require('cheerio');
-const { DOMParser } = require('xmldom');
-const xpath = require('xpath');
+import products  from './prods';
+import puppeteer from 'puppeteer';
+import cheerio from 'cheerio';
+import { DOMParser } from 'xmldom';
+import xpath from 'xpath';
 const args = process.argv.slice(2); // Remove the first two elements
 
 // Function to fetch HTML using Puppeteer
