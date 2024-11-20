@@ -1,7 +1,7 @@
 # elements-matcher
 Find Element using Css/Xpath on Literatum Sites
 
-to run the tool the following command
+to run the tool the following command::
 node explorer.js "acc" ".multi-search" "doi"
 
 firt parameter >> acc 
