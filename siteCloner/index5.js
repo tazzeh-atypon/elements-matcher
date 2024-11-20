@@ -1,7 +1,7 @@
-const puppeteer = require('puppeteer');
-const fs = require('fs');
-const path = require('path');
-const { argv } = require('process');
+import puppeteer from 'puppeteer';
+import fs from 'fs';
+import path from 'path';
+import { argv } from 'process';
 
 async function downloadAllResources(websiteUrl, outputDir) {
     const browser = await puppeteer.launch();
