@@ -10,7 +10,7 @@ const args = process.argv.slice(2); // Remove the first two elements
 async function fetchHtml(url) {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
-    await page.goto(url, { waitUntil: 'networkidle2' });
+    await page.goto(url, { waitUntil: 'networkidle0' });
     const html = await page.content();
     await browser.close();
     return html;
@@ -29,12 +29,12 @@ function queryBuilder(xpath){
 
 // Function to parse HTML and check CSS selector
 async function checkCssSelector(url, cssSelector) {
-    console.log('....... ....... ...... ......')
     try {
         const html = await fetchHtml(url);
         const $ = cheerio.load(html);
         
-        console.log(`URL: ${url}`);
+        console.log(`\n~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~`);
+        console.log(`\n Page : ${url} Searching ...`);
         if (cssSelector.startsWith('/') || cssSelector.startsWith('//')){
             // Parse HTML for XPath
             let xPathQuery = queryBuilder(cssSelector);
@@ -43,12 +43,10 @@ async function checkCssSelector(url, cssSelector) {
             const xPathElements = xpath.select(xPathQuery, doc);
             
             if (xPathElements.length > 0) {
-                console.log(`Matched elements with XPath: ${xPathElements.length}`);
+                console.log(`\nMatched elements with XPath: ${xPathElements.length}\n`);
                 xPathElements.forEach((element, index) => {
                     console.log(`Element ${index + 1}:`, element.toString().substring(0, 50), " ...");
-                    console.error(`---------------------------------------`);
-                    console.log(`~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`);
-                    console.error(`---------------------------------------`);
+                    console.warn(`- - - - - - - - - - - - - - - - -`);
                 });
             } else {
                 console.log("No matches found with XPath.");
@@ -57,13 +55,11 @@ async function checkCssSelector(url, cssSelector) {
         else {
             const elements = $(cssSelector);
             if (elements.length > 0) {
-                console.log(`Matched elements: ${elements.length}`);
+                console.log(`Matched elements: ${elements.length}\n`);
                 elements.each(function (index, element) {
                     console.log(`Element ${index + 1}:`, $.html(element).substring(0,50) ," ...");
                     
-                    console.error(`---------------------------------------`);
-                    console.log(`~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`);
-                    console.error(`---------------------------------------`);
+                    console.warn(`- - - - - - - - - - - - - - - - -`);
                 });
             } else {
                 // console.log($.html())
@@ -151,7 +147,7 @@ const matcher = async (prods, pattern) => {
     let keysCollection = Object.keys(prods);
     let currentProd = keysCollection[0];
     if (!currentProd) { console.log("items exploration finshed"); return};
-    console.log(`start matching on ${keysCollection}.......\n\n`)
+    console.warn(`Start Matching On ${keysCollection} .......\n`)
     let pageList = prods[currentProd];
     delete prods[currentProd];
     for (const url of pageList) {
@@ -163,7 +159,7 @@ const matcher = async (prods, pattern) => {
 const prodList = args?.[0];
 const pattern = args?.[1];
 const filter = args?.[2];// to be continued
-console.log("product/s: ", prodList)
+console.log("\nProduct/s: ", prodList)
 const prodMapper = new ProdMapper(products);
 prodMapper.setSitesList(prodList);
 let prods = prodMapper.getProductsTree(prodMapper.getProdsList());
