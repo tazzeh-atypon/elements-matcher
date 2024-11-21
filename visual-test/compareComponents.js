@@ -107,5 +107,5 @@ function resizeImage(img, width, height) {
 // Example usage
 const url1 = 'https://achs-prod.literatumonline.com/';
 const url2 = 'https://achs-test.literatumonline.com/';
-const selector = '.slider-multi-search'; // Adjust this to target your specific widget
+const selector = '.header'; // Adjust this to target your specific widget
 compareComponents(url1, url2, selector);

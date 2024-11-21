@@ -4,7 +4,7 @@ import { PNG } from 'pngjs';
 import fs from 'fs/promises';
 
 async function comparePages(url1, url2) {
-    const browser = await puppeteer.launch({ headless: true });
+    const browser = await puppeteer.launch({ headless: true, args: ['--ignore-certificate-errors'] });
     const page1 = await browser.newPage();
     const page2 = await browser.newPage();
 
@@ -148,6 +148,6 @@ async function addDivsForMissingElements(page1, page2) {
 }
 
 // Example usage
-const url = 'https://siam-stag.literatumonline.com/';
-const url2 = 'https://siam-prod.literatumonline.com/';
+const url = 'https://thunderstruck:17070/';
+const url2 = 'https://pnas-prod.literatumonline.com/';
 comparePages(url, url2);
