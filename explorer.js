@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+//comment 1
 import products  from './QAproductsList.js';
 import puppeteer from 'puppeteer';
 import cheerio from 'cheerio';
