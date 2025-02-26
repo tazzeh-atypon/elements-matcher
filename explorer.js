@@ -6,11 +6,55 @@ import { DOMParser } from 'xmldom';
 import xpath from 'xpath';
 const args = process.argv.slice(2); // Remove the first two elements
 
+
+const helper = {
+    getBaseUrl: (url) => {
+        const parsedUrl = new URL(url);
+        return `${parsedUrl.protocol}//${parsedUrl.hostname}/`;
+    }
+}
+
+
 // Function to fetch HTML using Puppeteer
 async function fetchHtml(url) {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
+    // console.log("aaaaaaaaaaaa", helper.getBaseUrl(url)+"action/alist")
+    // await page.goto(helper.getBaseUrl(url) + "action/alist", { waitUntil: 'networkidle0' });
+
+    // await page.type('#openid_url', 'http://support.atypon.com/user/tazzeh'); // Replace with the actual selector for the username field
+    // await page.click(".go_btn");
+
+    // // Wait for navigation (if the login redirects to another page)
+    // await page.waitForNavigation();
+
+
+    // // Fill in the login form
+    // await page.type('#login', 'tazzeh'); // Replace with the actual selector for the username field
+    // await page.type('#password', 'tsBHXwuH'); // Replace with the actual selector for the password field
+
+    // await page.click('input[name="submit"]'); // Replace with the actual selector for the login button
+    // // Wait for navigation (if the login redirects to another page)
+    // await page.waitForNavigation();
+
+
+    // // // Click the login button
+    // // await page.click('#login-button'); // Replace with the actual selector for the login button
+
+    // // Wait for navigation (if the login redirects to another page)
+    // await page.waitForNavigation();
+    // Set mobile emulation
+    if (args.includes("mobile")){
+        // const mobileViewport = puppeteer.devices['iPhone 12'];
+        await page.setViewport({ width: 375, height: 812, isMobile: true });
+    }
+
+
     await page.goto(url, { waitUntil: 'networkidle0' });
+    
+
+
+
     const html = await page.content();
     await browser.close();
     return html;
@@ -28,9 +72,9 @@ function queryBuilder(xpath){
 }
 
 // Function to parse HTML and check CSS selector
-async function checkCssSelector(url, cssSelector) {
+async function checkCssSelector(url, cssSelector,args) {
     try {
-        const html = await fetchHtml(url);
+        const html = await fetchHtml(url,args);
         const $ = cheerio.load(html);
         
         console.log(`\n~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~`);
@@ -44,7 +88,8 @@ async function checkCssSelector(url, cssSelector) {
             
             if (xPathElements.length > 0) {
                 console.log(`\nMatched elements with XPath: ${xPathElements.length}\n`);
-                xPathElements.forEach((element, index) => {
+                let maxRes = xPathElements.length > 10 ? 10 : xPathElements.length;
+                xPathElements.slice(0, maxRes).forEach((element, index) => {
                     console.log(`Element ${index + 1}:`, element.toString().substring(0, 50), " ...");
                     console.warn(`- - - - - - - - - - - - - - - - -`);
                 });
@@ -56,7 +101,8 @@ async function checkCssSelector(url, cssSelector) {
             const elements = $(cssSelector);
             if (elements.length > 0) {
                 console.log(`Matched elements: ${elements.length}\n`);
-                elements.each(function (index, element) {
+                let maxRes = elements.length > 10 ? 10 : elements.length;
+                elements.splice(0, maxRes).each(function (index, element) {
                     console.log(`Element ${index + 1}:`, $.html(element).substring(0,50) ," ...");
                     
                     console.warn(`- - - - - - - - - - - - - - - - -`);
@@ -142,7 +188,7 @@ class ProdMapper {
 }
 
 // Check CSS selector for each URL
-const matcher = async (prods, pattern) => {
+const matcher = async (prods, pattern,args) => {
     if (!prods) return;
     let keysCollection = Object.keys(prods);
     let currentProd = keysCollection[0];
@@ -151,9 +197,9 @@ const matcher = async (prods, pattern) => {
     let pageList = prods[currentProd];
     delete prods[currentProd];
     for (const url of pageList) {
-        await checkCssSelector(url, pattern);
+        await checkCssSelector(url, pattern,args);
     }
-    return matcher(prods,pattern);
+    return matcher(prods,pattern,args);
 }
 
 const prodList = args?.[0];
@@ -163,7 +209,7 @@ console.log("\nProduct/s: ", prodList)
 const prodMapper = new ProdMapper(products);
 prodMapper.setSitesList(prodList);
 let prods = prodMapper.getProductsTree(prodMapper.getProdsList());
-matcher(prods,pattern);
+matcher(prods,pattern,[...args]);
 // console.log("filters: ", filter);
 
 
