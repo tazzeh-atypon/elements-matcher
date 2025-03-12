@@ -26,6 +26,8 @@
     "pngjs": "^7.0.0",
     "puppeteer": "^22.13.0",
     "xmldom": "^0.6.0",
-    "xpath": "^0.0.34"
+    "xpath": "^0.0.34",
+    "ui-article": "git+ssh://git@github.com/atypon/ui-article.git#v5.2.11",
+    "ui-core": "git+ssh://git@github.com:tazzeh-atypon/elements-matcher.git#v1.0.3"
   }
 }
